@@ -10,8 +10,9 @@ function UserResults() {
   useEffect(() => {
     fetchUsers();
   }, []);
+// above: fetching data once the page loads 
 
-
+// below: created asynchronous function to get users data from the github api link and with token
   const fetchUsers = async () => {
     const response = await fetch(`${process.env.REACT_APP_GITHUB_URL}/users`, {
       headers: {

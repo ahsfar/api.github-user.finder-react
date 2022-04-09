@@ -29,3 +29,5 @@ UserItem.protoTypes ={
 }
 
 export default UserItem
+
+// for showing user profile and avatar and importing that into UserResults.jsx
