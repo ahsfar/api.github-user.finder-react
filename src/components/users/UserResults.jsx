@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
 import Spinner from "../layout/Spinner";
 import UserItem from "./UserItem";
 import GithubContext from "../../context/github/GithubContext";
@@ -8,12 +8,12 @@ import GithubContext from "../../context/github/GithubContext";
 function UserResults() {
 // using usetate with context api and importing users, loading and fetchUsers
 //from global state from GithubContext.jsx
-const {users, loading, fetchUsers} = useContext(GithubContext)
+const {users, loading } = useContext(GithubContext)
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-  // above: fetching data once the page loads
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, []);
+  // // above: fetching data once the page loads
 
 
   // below: putting condition if it's not lodaing then show the users from UserItem and passing user with ID
