@@ -10,6 +10,7 @@ export const GithubProvider = ({ children }) => {
   const initialState = {
     users: [],
     user: {},
+    repos: [],
     loading: false,
   };
   // dispatch the action to our reducers
@@ -56,36 +57,54 @@ export const GithubProvider = ({ children }) => {
     });
   };
 
-    //Get a single user 
-    const getUser = async (login) => {
-      setLoading();
-  
-      const response = await fetch(`${GITHUB_URL}/users/${login}`, {
-        headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
-        },
+  //Get a single user
+  const getUser = async (login) => {
+    setLoading();
+
+    const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
+    });
+
+    if (response.status === 404) {
+      window.location = "/not foun";
+    } else {
+      const data = await response.json();
+      // paylod is gonna be singler user data that is gonna come from above data
+      dispatch({
+        type: "GET_USER",
+        payload: data,
       });
+    }
+  };
 
-      if (response.status === 404){
-        window.location = "/not foun"
-      } else{
-        const data = await response.json();
-  // paylod is gonna be singler user data that is gonna come from above data
-        dispatch({
-          type: "GET_USER",
-          payload: data,
-        });
-      }
+  //Get  User Repos function
+  const getUserRepos = async (login) => {
+    setLoading();
+      // getting the latest 10 repositories
+    const params = new URLSearchParams({
+      sort: "created",
+      per_page: 10
+    });
+    const response = await fetch(`${GITHUB_URL}/users/${login}/repos?${params}`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
+    });
+    const data = await response.json();
 
-    
-    };
+    dispatch({
+      type: "GET_REPOS",
+      payload: data,
+    });
+  };
 
   //Clear Users
-  const clearUsers =  () => 
+  const clearUsers = () =>
     dispatch({
       type: "SET_CLEAR",
     });
-  
 
   // Set Loading
   const setLoading = () =>
@@ -98,9 +117,11 @@ export const GithubProvider = ({ children }) => {
         users: state.users,
         loading: state.loading,
         user: state.user,
+        repos: state.repos,
         searchUsers,
         clearUsers,
         getUser,
+        getUserRepos,
       }}
     >
       {children}
